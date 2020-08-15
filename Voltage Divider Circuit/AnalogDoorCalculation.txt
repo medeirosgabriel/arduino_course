@@ -1,0 +1,11 @@
+ANALOG DOOR CALCULATION
+
+DDP -> 0-5
+ANALOG PORT -> 0-1023
+
+Y -> Analog Port Input
+X -> Input DDP
+
+By rule of three:
+
+Y = 1023X/5
