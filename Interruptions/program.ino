@@ -1,4 +1,5 @@
 #define BTN_PIN 0
+// Interruption Button
 // INT 0 = PIN 2
 // INT 1 = PIN 3
 
