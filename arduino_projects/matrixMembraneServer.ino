@@ -2,32 +2,32 @@
 #include <WiFi.h>
 #include <WebServer.h>
 
-#define senhaCofre "124"
+#define passwordBox "124"
 
-byte linhas[] = {2,4};
-byte colunas[] = {5,18};
+byte rows[] = {2,4};
+byte cols[] = {5,18};
 
-const byte nLinhas = 4;
-const byte nColunas = 3;
+const byte n_rows = 4;
+const byte n_cols = 3;
 
-char teclas[nLinhas][nColunas] = {
+char keys[n_rows][n_cols] = {
   {'1','2'},
   {'4','5'},
 };
 
-Keypad myKeypad = Keypad(makeKeymap(teclas), linhas, colunas, nLinhas , nColunas);
+Keypad myKeypad = Keypad(makeKeymap(keys), rows, cols, n_rows , n_cols);
 
-const char* ssid = "brisa-998109";
-const char* senha = "hfnbn2is";
+const char* ssid = "*********";
+const char* password = "*********";
 
 WebServer server(8888);
 
 void setup() {
   Serial.begin(115200);
-  Serial.print("Conectando à ");
+  Serial.print("Connecting to ");
   Serial.print(ssid);
   
-  WiFi.begin(ssid, senha);
+  WiFi.begin(ssid, password);
   
   while (WiFi.status() != WL_CONNECTED) {
     Serial.print(".");
@@ -35,54 +35,54 @@ void setup() {
   }
   
   Serial.println("");
-  Serial.println("WiFi conectada!");
-  Serial.print("Seu IP: ");  
+  Serial.println("Connected WiFi!");
+  Serial.print("IP Address: ");  
   Serial.println(WiFi.localIP());
 
   server.on("/", home_);
   server.onNotFound(notFound);
 
   server.begin();
-  Serial.println("HTTP server no ar!");
+  Serial.println("HTTP server running!");
 }
 
-String senhasDigitadas[100] = {};
-int indice = 0;
-String senhaDigitada = "";
+String typedPasswords[100] = {};
+int index = 0;
+String typedPassword = "";
 
 void loop() {
   server.handleClient();
-  char tecla = myKeypad.getKey();
-  if (tecla != NULL){
-    if (tecla == '5') {
-      senhasDigitadas[indice%100] = senhaDigitada;
-      Serial.println(senhaDigitada);
-      if (senhaDigitada == senhaCofre) {
+  char key = myKeypad.getKey();
+  if (key != NULL){
+    if (key == '5') {
+      typedPasswords[index%100] = typedPassword;
+      Serial.println(typedPassword);
+      if (typedPassword == passwordBox) {
         Serial.println("OK");
       } else {
-        Serial.println("Senha Incorreta");
+        Serial.println("Incorrect Password");
       }
-      indice ++;
-      senhaDigitada = "";
+      index ++;
+      typedPassword = "";
     } else {
-      Serial.println(tecla);
-      senhaDigitada += tecla;
+      Serial.println(key);
+      typedPassword += key;
     }
   }
 }
 
 void home_() {
-  server.send(200, "text/html", enviarHTML()); 
+  server.send(200, "text/html", sendHTML()); 
 }
 
 void notFound(){
   server.send(404, "text/plain", "NOT FOUND");
 }
 
-String enviarHTML(){
+String sendHTML(){
   String ptr = "<!DOCTYPE html> <html>\n";
   ptr +="<head><meta name=\"viewport\" content=\"width=device-width, initial-scale=1.0, user-scalable=no\">\n";
-  ptr +="<title>ESP32 Seguranca de Cofre</title>\n";
+  ptr +="<title>ESP32 Safe Box</title>\n";
   ptr +="<style>html { font-family: Helvetica; display: inline-block; margin: 0px auto; text-align: center;}\n";
   ptr +="body{margin-top: 50px;} h1 {color: #444444;margin: 50px auto 30px;}\n";
   ptr +="p {font-size: 24px;color: #444444;margin-bottom: 10px;}\n";
@@ -90,10 +90,10 @@ String enviarHTML(){
   ptr +="</head>\n";
   ptr +="<body>\n";
   ptr +="<div id=\"webpage\">\n";
-  ptr +="<h1>ESP32 Seguranca de Cofre</h1>\n";
-  for (int i = 0; i < sizeof(senhasDigitadas)/sizeof(String); i++) {
+  ptr +="<h1>ESP32 Safe Box</h1>\n";
+  for (int i = 0; i < sizeof(typedPasswords)/sizeof(String); i++) {
     ptr += "<p>";
-    ptr += senhasDigitadas[i];
+    ptr += typedPasswords[i];
     ptr += "</p>";
   }
   ptr +="</div>\n";

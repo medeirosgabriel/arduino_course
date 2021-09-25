@@ -1,7 +1,7 @@
 #include <WiFi.h>
  
-const char* ssid = "brisa-998109";
-const char* password = "hfnbn2is";
+const char* ssid = "*******";
+const char* password = "*******";
 
 #define LED 17
 
@@ -12,7 +12,7 @@ void setup() {
   Serial.begin(115200);
   pinMode(LED, OUTPUT);
   
-  Serial.print("Conectando-se a ");
+  Serial.print("Connecting to ");
   Serial.print(ssid);
   WiFi.begin(ssid, password);
  
@@ -22,8 +22,8 @@ void setup() {
   }
  
   Serial.println("");
-  Serial.println("WiFi conectada.");
-  Serial.print("Endereço de IP: ");
+  Serial.println("Connected WiFi.");
+  Serial.print("IP Address: ");
   Serial.println(WiFi.localIP());
  
   server.begin();
@@ -34,10 +34,10 @@ void loop() {
   if (client) {
     String currentLine = "";
     while (client.connected()) {
-      if (client.available()) { // Verifica se existe um cliente com dados a serem transmitidos
-        char c = client.read(); // Ler o próximo byte do cliente - Stream de dados - URL
-        if (c == '\n') { // Verifica se a linha terminou
-          if (currentLine.length() == 0) { // Verifica se a mensagem terminou
+      if (client.available()) { // Checks if there is a client with data to be transmitted 
+        char c = client.read(); // Read Client Next Byte - Data Stream - URL 
+        if (c == '\n') { // Check if the line ended 
+          if (currentLine.length() == 0) { // Check if the message ended 
             client.print("<a href=\"/H\">LIGAR LED.</a><br>");
             client.print("<a href=\"/L\">DESLIGAR LED.</a><br>");
             client.println();
